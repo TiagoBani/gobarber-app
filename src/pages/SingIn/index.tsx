@@ -1,8 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Image, KeyboardAvoidingView, Platform, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+
 import Icon from 'react-native-vector-icons/Feather';
+import { Form } from '@unform/mobile';
+import { FormHandles } from '@unform/core';
 
 import logoImg from '../../assets/logo.png';
 
@@ -12,14 +15,19 @@ import Input from '../../components/Input';
 import {
   Container,
   Title,
-  ForgotPassowrd,
-  ForgotPassowrdText,
+  ForgotPassword,
+  ForgotPasswordText,
   CreateAccountButton,
   CreateAccountButtonText,
 } from './styles';
 
 const SingIn: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
   const { navigate } = useNavigation();
+
+  const handleSingIn = useCallback((data: object) => {
+    console.log(data);
+  }, []);
 
   return (
     <>
@@ -39,13 +47,21 @@ const SingIn: React.FC = () => {
               <Title>Faça seu logon</Title>
             </View>
 
-            <Input name="email" icon="mail" placeholder="E-mail" />
-            <Input name="password" icon="lock" placeholder="Senha" />
-            <Button onPress={() => {}}>Entrar</Button>
+            <Form ref={formRef} onSubmit={handleSingIn}>
+              <Input name="email" icon="mail" placeholder="E-mail" />
+              <Input name="password" icon="lock" placeholder="Senha" />
+              <Button
+                onPress={() => {
+                  formRef.current?.submitForm();
+                }}
+              >
+                Entrar
+              </Button>
+            </Form>
 
-            <ForgotPassowrd onPress={() => {}}>
-              <ForgotPassowrdText>Esqueci minha senha.</ForgotPassowrdText>
-            </ForgotPassowrd>
+            <ForgotPassword onPress={() => {}}>
+              <ForgotPasswordText>Esqueci minha senha.</ForgotPasswordText>
+            </ForgotPassword>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>

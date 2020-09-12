@@ -8,7 +8,13 @@ export const Container = styled(RectButton)`
   border-radius: 10px;
   margin-top: 8px;
 
+  flex-direction: row;
+  align-items: center;
   justify-content: center;
+`;
+
+export const ContainerRow = styled.View`
+  flex: 1;
   align-items: center;
 `;
 

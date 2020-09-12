@@ -18,11 +18,11 @@ export const Title = styled.Text`
   margin: 64px 0px 24px;
 `;
 
-export const ForgotPassowrd = styled.TouchableOpacity`
+export const ForgotPassword = styled.TouchableOpacity`
   margin-top: 24px;
 `;
 
-export const ForgotPassowrdText = styled.Text`
+export const ForgotPasswordText = styled.Text`
   color: #f4ede8;
   font-size: 16px;
   font-family: 'RobotoSlab-Regular';
