@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useRef } from 'react';
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -9,8 +10,10 @@ import {
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
+
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
 
 import logoImg from '../../assets/logo.png';
 
@@ -18,6 +21,13 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 
 import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
+import getValidationErrors from '../../utils/getValidationErrors';
+
+interface SingUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
 
 const SingUp: React.FC = () => {
   const { goBack } = useNavigation();
@@ -27,8 +37,41 @@ const SingUp: React.FC = () => {
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSingUp = useCallback((data: object) => {
-    console.log(data);
+  const handleSingUp = useCallback(async (data: SingUpFormData) => {
+    try {
+      formRef.current?.setErrors({});
+
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório.'),
+        email: Yup.string()
+          .required('E-mail obrigatório.')
+          .email('Digite um e-mail válido.'),
+        password: Yup.string().min(6, 'No minimo 6 digitos.'),
+      });
+
+      await schema.validate(data, { abortEarly: false });
+
+      // await api.post('/users', data);
+
+      // history.push('/');
+
+      // addToast({
+      //   title: 'Cadastro realizado!',
+      //   type: 'success',
+      //   description: 'Você já pode realizar seu login no GoBarber!',
+      // });
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(error);
+        formRef.current?.setErrors(errors);
+        return;
+      }
+
+      Alert.alert(
+        'Erro no cadastro',
+        'Ocorreu um erro ao realizar cadastro, tente novamente.',
+      );
+    }
   }, []);
 
   return (
