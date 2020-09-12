@@ -3,8 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SingIn from '../pages/SingIn';
 import SingUp from '../pages/SingUp';
 
-// import { Container } from './styles';
-
 const Auth = createStackNavigator();
 
 const AuthRoutes: React.FC = () => {

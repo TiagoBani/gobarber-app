@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, KeyboardAvoidingView, Platform, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -18,6 +19,8 @@ import {
 } from './styles';
 
 const SingIn: React.FC = () => {
+  const { navigate } = useNavigation();
+
   return (
     <>
       <KeyboardAvoidingView
@@ -46,7 +49,7 @@ const SingIn: React.FC = () => {
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
-      <CreateAccountButton onPress={() => {}}>
+      <CreateAccountButton onPress={() => navigate('SingUp')}>
         <Icon name="log-in" size={20} color="#ff9900" />
         <CreateAccountButtonText>Criar uma conta.</CreateAccountButtonText>
       </CreateAccountButton>
