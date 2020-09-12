@@ -15,13 +15,15 @@ import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 
-import logoImg from '../../assets/logo.png';
+import getValidationErrors from '../../utils/getValidationErrors';
+import api from '../../services/api';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 
+import logoImg from '../../assets/logo.png';
+
 import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
-import getValidationErrors from '../../utils/getValidationErrors';
 
 interface SingUpFormData {
   name: string;
@@ -37,42 +39,43 @@ const SingUp: React.FC = () => {
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSingUp = useCallback(async (data: SingUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSingUp = useCallback(
+    async (data: SingUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório.'),
-        email: Yup.string()
-          .required('E-mail obrigatório.')
-          .email('Digite um e-mail válido.'),
-        password: Yup.string().min(6, 'No minimo 6 digitos.'),
-      });
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório.'),
+          email: Yup.string()
+            .required('E-mail obrigatório.')
+            .email('Digite um e-mail válido.'),
+          password: Yup.string().min(6, 'No minimo 6 digitos.'),
+        });
 
-      await schema.validate(data, { abortEarly: false });
+        await schema.validate(data, { abortEarly: false });
+        await api.post('users', data);
 
-      // await api.post('/users', data);
+        Alert.alert(
+          'Cadastro realizado com sucesso',
+          'Você já pode realizar login na aplicação.',
+        );
 
-      // history.push('/');
+        goBack();
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error);
+          formRef.current?.setErrors(errors);
+          return;
+        }
 
-      // addToast({
-      //   title: 'Cadastro realizado!',
-      //   type: 'success',
-      //   description: 'Você já pode realizar seu login no GoBarber!',
-      // });
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(error);
-        formRef.current?.setErrors(errors);
-        return;
+        Alert.alert(
+          'Erro no cadastro',
+          'Ocorreu um erro ao realizar cadastro, tente novamente.',
+        );
       }
-
-      Alert.alert(
-        'Erro no cadastro',
-        'Ocorreu um erro ao realizar cadastro, tente novamente.',
-      );
-    }
-  }, []);
+    },
+    [goBack],
+  );
 
   return (
     <>
