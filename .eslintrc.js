@@ -4,6 +4,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   rules: {
-    "react-native/no-inline-styles": "off"
+    "react-native/no-inline-styles": "off",
+    "import/no-duplicates": "off",
   }
 };
